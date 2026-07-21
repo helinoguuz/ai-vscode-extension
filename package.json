@@ -1,0 +1,162 @@
+{
+  "name": "devmate",
+  "displayName": "DevMate",
+  "description": "A local-first VS Code coding assistant with project tools, sessions, and model profiles.",
+  "version": "1.0.0",
+  "publisher": "local",
+  "author": "Ali Najjar",
+  "private": true,
+  "engines": {
+    "vscode": "^1.96.2",
+    "node": ">=20.0.0",
+    "npm": ">=9.0.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:devMate.openChat",
+    "onView:devmate.dedicatedAssistantView"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "devMate.openChat",
+        "title": "DevMate: Open Chat",
+        "category": "DevMate"
+      }
+    ],
+    "viewsContainers": {
+      "secondarySidebar": [
+        {
+          "id": "devmate-dedicated-chat",
+          "title": "DevMate",
+          "icon": "media/devmate.svg"
+        }
+      ]
+    },
+    "views": {
+      "devmate-dedicated-chat": [
+        {
+          "type": "webview",
+          "id": "devmate.dedicatedAssistantView",
+          "name": "Chat",
+          "contextualTitle": "DevMate",
+          "icon": "media/devmate.svg"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "DevMate",
+      "properties": {
+        "devMate.backendUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8000",
+          "description": "Base URL of the local DevMate backend service."
+        },
+        "devMate.manageLocalBackend": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically start and monitor the bundled backend when backendUrl is a local HTTP address."
+        },
+        "devMate.backendPythonPath": {
+          "type": "string",
+          "default": "",
+          "description": "Optional Python executable used for the managed local backend. DevMate otherwise prefers its project virtual environment and then Python on PATH."
+        },
+        "devMate.maxTokens": {
+          "type": "number",
+          "default": 16384,
+          "minimum": 128,
+          "maximum": 32000,
+          "description": "Maximum response tokens shared by model reasoning, answers, and complete Code-mode file contents."
+        },
+        "devMate.temperature": {
+          "type": "number",
+          "default": 0.2,
+          "minimum": 0,
+          "maximum": 2,
+          "description": "Sampling temperature for model requests."
+        },
+        "devMate.requestTimeoutSeconds": {
+          "type": "integer",
+          "default": 900,
+          "minimum": 10,
+          "maximum": 1800,
+          "description": "How long DevMate allows each model-provider call to run. The extension automatically adds a 30-second transport buffer."
+        },
+        "devMate.commandTimeoutSeconds": {
+          "type": "integer",
+          "default": 300,
+          "minimum": 10,
+          "maximum": 1800,
+          "description": "Maximum runtime for each approved DevMate verification command."
+        },
+        "devMate.toolCallLimit": {
+          "type": "integer",
+          "default": 16,
+          "minimum": 4,
+          "maximum": 100,
+          "description": "Maximum project-tool calls in one DevMate request. Higher values can increase runtime, provider cost, and loop risk."
+        },
+        "devMate.readFileMaxLines": {
+          "type": "integer",
+          "default": 400,
+          "minimum": 100,
+          "maximum": 1000,
+          "description": "Maximum lines returned by one read_file agent-tool call."
+        },
+        "devMate.listFilesMaxResults": {
+          "type": "integer",
+          "default": 200,
+          "minimum": 20,
+          "maximum": 500,
+          "description": "Maximum file paths returned by one list_files call."
+        },
+        "devMate.searchCodeMaxResults": {
+          "type": "integer",
+          "default": 50,
+          "minimum": 10,
+          "maximum": 200,
+          "description": "Maximum matches returned by one search_code call."
+        },
+        "devMate.diagnosticsMaxResults": {
+          "type": "integer",
+          "default": 100,
+          "minimum": 10,
+          "maximum": 300,
+          "description": "Maximum Problems entries returned by one get_diagnostics call."
+        },
+        "devMate.terminalErrorsMaxResults": {
+          "type": "integer",
+          "default": 5,
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Maximum failed terminal commands returned by read_terminal_errors."
+        },
+        "devMate.codeNavigationMaxResults": {
+          "type": "integer",
+          "default": 100,
+          "minimum": 10,
+          "maximum": 300,
+          "description": "Maximum locations returned by get_symbols, find_definition, or find_references."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build:backend": "node scripts/build-backend.js",
+    "compile": "tsc -p ./ --listEmittedFiles",
+    "check": "tsc -p ./ --noEmit",
+    "test": "npm run compile && node --test --test-isolation=none tests/agentCheckpoint.test.js tests/agentToolSettings.test.js tests/agentTools.test.js tests/apiClient.test.js tests/backendManager.test.js tests/changeSummary.test.js tests/commandTools.test.js tests/context.test.js tests/conversation.test.js tests/dependencyTools.test.js tests/errorContext.test.js tests/fileChanges.test.js tests/fileTools.test.js tests/llmProfiles.test.js tests/permissions.test.js tests/projectContext.test.js tests/projectIndex.test.js tests/pythonEnvironment.test.js tests/retryPolicy.test.js tests/sessions.test.js tests/webviewScript.test.js",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run build:backend && npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.8",
+    "@types/vscode": "^1.96.2",
+    "typescript": "^5.4.5"
+  }
+}
