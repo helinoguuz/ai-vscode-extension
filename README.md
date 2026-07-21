@@ -1,11 +1,15 @@
-# DevMate
+# AI-Powered VS Code Extension
 
-DevMate is a VS Code extension that can inspect a project, answer questions about its code, make approved file changes, and run a restricted set of verification commands. It is designed around a simple rule: the language model can request actions, but the extension keeps control of the local machine.
+This project is a VS Code extension that can inspect a project, answer questions about its code, make approved file changes, and run a restricted set of verification commands. It is designed around a simple rule: the language model can request actions, but the extension keeps control of the local machine.
 
 The project contains two applications:
 
 - A TypeScript VS Code extension for the chat interface, project context, tools, permissions, and sessions.
 - A local Python/FastAPI backend for prompt construction, provider requests, and response streaming.
+
+## Project context
+
+This project was developed collaboratively by a student team as part of a university course. The repository reflects the team's joint implementation across the TypeScript extension, the local FastAPI backend, testing, documentation, and integration work.
 
 ## Features
 
@@ -70,22 +74,22 @@ Compile the extension:
 npm run compile
 ```
 
-## Running DevMate from source
+## Running the extension from source
 
 1. Open the repository folder in VS Code.
-2. Press `F5` or select **Run DevMate Extension** from the Run and Debug view.
+2. Press `F5` or select **Run Extension** from the Run and Debug view.
 3. Wait for the Extension Development Host window to open.
-4. Click **DevMate** in the bottom-right status bar.
+4. Open the extension in the bottom-right status bar.
 
 The development extension is installed only in the Extension Development Host window. If a different demo project is needed, change the workspace path in `.vscode/launch.json` before pressing `F5`.
 
-The backend starts automatically when `devMate.manageLocalBackend` is enabled and `devMate.backendUrl` points to a local HTTP address. DevMate prefers a bundled backend executable when one is available for the current platform. Development builds then fall back to `.venv`, `venv`, a configured interpreter, or Python on `PATH`.
+The backend starts automatically when `the local-backend management setting` is enabled and `the backend URL setting` points to a local HTTP address. The extension prefers a bundled backend executable when one is available for the current platform. Development builds then fall back to `.venv`, `venv`, a configured interpreter, or Python on `PATH`.
 
 ## Configuring a model
 
-DevMate does not include provider credentials.
+The extension does not include provider credentials.
 
-1. Open DevMate.
+1. Open the extension.
 2. Click the model selector beside the Ask button.
 3. Configure the built-in Nemotron profile or add a custom profile.
 4. Enter an API key if the selected provider requires one.
@@ -104,7 +108,7 @@ The user must provide their own NVIDIA API key.
 
 ### OpenAI-compatible profiles
 
-A custom profile can use the default OpenAI endpoint or another compatible base URL. DevMate sends provider keys to the backend only when the configured backend address is local.
+A custom profile can use the default OpenAI endpoint or another compatible base URL. The extension sends provider keys to the backend only when the configured backend address is local.
 
 ### Ollama
 
@@ -114,7 +118,7 @@ Ollama profiles default to:
 http://127.0.0.1:11434
 ```
 
-The selected model must already be installed in Ollama. DevMate does not download Ollama models.
+The selected model must already be installed in Ollama. The extension does not download Ollama models.
 
 ### Intelligence levels
 
@@ -141,13 +145,13 @@ Source content is collected by the extension host. The webview receives labels a
 
 ### Sessions
 
-DevMate opens on a session list. Each session stores its project identity, messages, and final file-change summaries. A session cannot be opened while a different project is active.
+The extension opens on a session list. Each session stores its project identity, messages, and final file-change summaries. A session cannot be opened while a different project is active.
 
 An unfinished tool run is stored as a bounded checkpoint. If the request fails or VS Code is reloaded, the **Continue** button can resume it with its saved tool history.
 
 ## Project retrieval
 
-Project scope uses a local lexical index. DevMate:
+Project scope uses a local lexical index. The extension:
 
 1. Finds eligible text files in the first workspace folder.
 2. Excludes dependencies, generated files, build output, credentials, lock files, and binary files.
@@ -194,7 +198,7 @@ File operations are executed by the extension, not the backend.
 - Verification commands can be allowed once or remembered as an exact command for the workspace.
 - Proposed file changes can be reviewed in VS Code's native diff editor.
 
-Before applying a change, DevMate checks workspace trust, path boundaries, protected files, symbolic links, file size, binary content, unsaved editor changes, and stale proposals. Approved edits use `WorkspaceEdit` and participate in VS Code's normal undo behaviour.
+Before applying a change, the extension checks workspace trust, path boundaries, protected files, symbolic links, file size, binary content, unsaved editor changes, and stale proposals. Approved edits use `WorkspaceEdit` and participate in VS Code's normal undo behaviour.
 
 ## Verification commands
 
@@ -218,7 +222,7 @@ The default backend URL is:
 http://127.0.0.1:8000
 ```
 
-The status indicator in the DevMate toolbar shows whether the backend is checking, starting, online, restarting, unmanaged, or offline. Click the indicator to open the backend output channel.
+The status indicator in the extension toolbar shows whether the backend is checking, starting, online, restarting, unmanaged, or offline. Click the indicator to open the backend output channel.
 
 The backend can also be started manually:
 
@@ -232,11 +236,11 @@ Check it at:
 http://127.0.0.1:8000/health
 ```
 
-When an external server is already listening at the configured address, DevMate uses it without trying to stop or replace it.
+When an external server is already listening at the configured address, the extension uses it without trying to stop or replace it.
 
 ## Settings
 
-The gear button in the DevMate toolbar opens the main settings dialog.
+The gear button in the extension toolbar opens the main settings dialog.
 
 | Setting | Default | Range or behaviour |
 | --- | ---: | --- |
@@ -250,7 +254,7 @@ The gear button in the DevMate toolbar opens the main settings dialog.
 
 The separate **Agent tools** settings screen controls maximum read lines and result counts for listing, searching, diagnostics, terminal errors, symbols, definitions, and references.
 
-The same values can be edited through normal VS Code settings under the `devMate` namespace.
+The same values can be edited through normal VS Code settings under the the extension settings namespace.
 
 ## Running the tests
 
@@ -294,7 +298,7 @@ Run the tests and create an installable VSIX:
 
 ```powershell
 npm test
-npx --yes @vscode/vsce package --out devmate-1.0.0.vsix --allow-missing-repository
+npx --yes @vscode/vsce package --out ai-vscode-extension-1.0.0.vsix --allow-missing-repository
 ```
 
 The `vscode:prepublish` script rebuilds the backend and TypeScript extension automatically. PyInstaller builds for the computer it runs on, so a Windows x64 VSIX must be built on Windows x64.
@@ -302,16 +306,16 @@ The `vscode:prepublish` script rebuilds the backend and TypeScript extension aut
 Install it with:
 
 ```powershell
-code --install-extension .\devmate-1.0.0.vsix
+code --install-extension .\ai-vscode-extension-1.0.0.vsix
 ```
 
 It can also be installed from VS Code through **Extensions: Install from VSIX**.
 
 ### Backend in the installed extension
 
-The Windows x64 VSIX includes a self-contained backend executable. DevMate starts it when VS Code opens, monitors its health, restarts it after a failure, and stops the process it owns when VS Code closes. Users do not need to install Python or configure `devMate.backendPythonPath` for that build.
+The Windows x64 VSIX includes a self-contained backend executable. The extension starts it when VS Code opens, monitors its health, restarts it after a failure, and stops the process it owns when VS Code closes. Users do not need to install Python or configure `the backend Python path setting` for that build.
 
-The Python backend source remains in the package as a fallback for development or an unsupported platform. In that case, install `backend/requirements.txt` and set **DevMate: Backend Python Path** to the interpreter.
+The Python backend source remains in the package as a fallback for development or an unsupported platform. In that case, install `backend/requirements.txt` and set **Backend Python Path** to the interpreter.
 
 ## Repository structure
 
@@ -337,20 +341,20 @@ The Python backend source remains in the package as a fallback for development o
 
 ## Troubleshooting
 
-### DevMate cannot reach the backend
+### AI-Powered VS Code Extension cannot reach the backend
 
-- Open the DevMate backend logs and check whether the bundled executable started.
+- Open the backend logs and check whether the bundled executable started.
 - Check whether port 8000 is already in use.
 - Restart the backend from the settings dialog.
-- On a platform without a bundled runtime, install `backend/requirements.txt` and configure **DevMate: Backend Python Path**.
+- On a platform without a bundled runtime, install `backend/requirements.txt` and configure **Backend Python Path**.
 
 ### The provider times out
 
-Increase the provider timeout in DevMate settings. Slow reasoning models may need several minutes before returning the first tool call or text event.
+Increase the provider timeout in the extension settings. Slow reasoning models may need several minutes before returning the first tool call or text event.
 
 ### A model returns no tools or only describes future work
 
-Check that the selected endpoint supports OpenAI-compatible function tools. DevMate can parse the native tool-call format and one bounded textual format used by some compatible models, but not every provider implements tools correctly.
+Check that the selected endpoint supports OpenAI-compatible function tools. The extension can parse the native tool-call format and one bounded textual format used by some compatible models, but not every provider implements tools correctly.
 
 ### Symbols, definitions, or references are empty
 
@@ -358,7 +362,7 @@ Install the relevant VS Code language extension and open the target file once so
 
 ### Verification cannot start
 
-The workspace must be trusted and VS Code Terminal Shell Integration must be available. The requested command must also match DevMate's verification registry.
+The workspace must be trusted and VS Code Terminal Shell Integration must be available. The requested command must also match the extension's verification registry.
 
 ## Known limitations
 
@@ -373,7 +377,7 @@ The workspace must be trusted and VS Code Terminal Shell Integration must be ava
 
 - Do not commit API keys or `.env` files.
 - Provider keys are stored in VS Code SecretStorage.
-- Keys are forwarded only through a loopback DevMate backend.
+- Keys are forwarded only through a loopback local backend.
 - Provider redirects are disabled to avoid forwarding credentials to another host.
 - Project and tool content is treated as untrusted data in backend prompts.
-- The model never receives direct filesystem, terminal, or VS Code API access.
+- The model never receives direct filesystem, terminal, 
